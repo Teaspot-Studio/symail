@@ -17,9 +17,9 @@ sample = [ ( [fromIntegral x1, fromIntegral x2, fromIntegral x3, fromIntegral x4
 opts :: EvOptions AST
 opts = EvOptions {
     ePopSize = 20
-  , eMaxGen = 100000
+  , eMaxGen = 1000
   , eMutaRate = 0.3
-  , eElites = 0.1
+  , eElites = 0.2
   , eTarget = 1000
   , eGMC = ASTGenOpts {
       goMaxDepth = 5 -- Глубина дерева
@@ -29,9 +29,21 @@ opts = EvOptions {
     }
   }
 
+myEvolve opts datum = do 
+  pop <- randomPopulation opts
+  go (eMaxGen opts) pop
+  where 
+  go 0 pop = do 
+    let (solution, fit) = getBestFit sample pop 
+    putStrLn $ "Solution: " ++ show (showFunction solution)
+    putStrLn $ "Fitness: " ++ show fit
+  go n pop = do
+    putStrLn $ "Generation " ++ show (eMaxGen opts - n)
+    let (solution, fit) = getBestFit sample pop 
+    putStrLn $ "Solution: " ++ show (showFunction solution)
+    putStrLn $ "Fitness: " ++ show fit
+    pop' <- oneStep opts datum pop
+    go (n-1) pop'
+
 main :: IO ()
-main = do
-  (finalPop :: Population AST) <- evolve opts sample  -- Провести эволюцию (либо макс поколение, либо достигли target ошибки)
-  let (solution, fit) = getBestFit sample finalPop 
-  putStrLn $ "Solution: " ++ show (showFunction solution)
-  putStrLn $ "Fitness: " ++ show fit
+main = myEvolve opts sample
