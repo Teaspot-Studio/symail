@@ -1,16 +1,19 @@
 {
+	"build_systems":
+	[
+		{
+			"name": "Stack",
+			"shell_cmd": "stack install",
+			"working_dir": "${project_path}"
+		}
+	],
 	"folders":
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "/home/ncrashed/dev/symreg"
 		}
-	],
-  "build_systems":
-  [
-    {
-      "name": "Stack",
-      "working_dir": "${project_path}",
-      "shell_cmd": "stack install && symail"    
-    }
-  ]
+	]
 }

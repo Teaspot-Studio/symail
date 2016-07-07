@@ -37,6 +37,7 @@ resolver: lts-6.6
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
+#- '../symreg'
 - location:
     git: http://git.teaspotstudio.ru/rbt-prototype/symreg.git
     commit: 82033c124e26abc497e7eb8d4239365e9d6cddc1

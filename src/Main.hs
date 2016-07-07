@@ -3,6 +3,8 @@ module Main where
 
 import Data.SymReg
 import Data.Genetics 
+import Data.Ord 
+import Data.List 
 
 -- | Four dimentional input
 sample :: ASTData -- [([Double], Double)]
@@ -29,17 +31,20 @@ opts = EvOptions {
     }
   }
 
+getBestFit' :: ASTData -> Population AST -> (AST, Double)
+getBestFit' datum pop = head $ sortBy (comparing $ Down . snd) $ (\i -> (i, fitness datum i)) <$> pop 
+
 myEvolve opts datum = do 
   pop <- randomPopulation opts
   go (eMaxGen opts) pop
   where 
   go 0 pop = do 
-    let (solution, fit) = getBestFit sample pop 
+    let (solution, fit) = getBestFit' sample pop 
     putStrLn $ "Solution: " ++ show (showFunction solution)
     putStrLn $ "Fitness: " ++ show fit
   go n pop = do
     putStrLn $ "Generation " ++ show (eMaxGen opts - n)
-    let (solution, fit) = getBestFit sample pop 
+    let (solution, fit) = getBestFit' sample pop 
     putStrLn $ "Solution: " ++ show (showFunction solution)
     putStrLn $ "Fitness: " ++ show fit
     pop' <- oneStep opts datum pop
